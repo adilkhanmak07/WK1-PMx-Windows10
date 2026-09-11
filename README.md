@@ -1,234 +1,183 @@
-# \# WK1-PMx — Windows 10 VirtualBox Lab
+# WK1-PMx — Windows 10 VirtualBox Lab
 
-# 
+## Overview
 
-# \## Project Overview
+This project demonstrates the deployment and network configuration of a **Windows 10 virtual machine using Oracle VirtualBox** as part of a Week 1 practical networking lab.
 
-# 
+The lab focused on installing Windows 10, configuring a static IPv4 address, connecting the VM to the required NAT Network, and verifying communication between Windows 10 and Kali Linux.
 
-# This project documents the complete setup and configuration of a Windows 10 virtual machine in Oracle VirtualBox.
+---
 
-# 
+## Objectives
 
-# The objective is to build a Windows 10 lab environment, connect it to the same VirtualBox NAT Network used by the Kali Linux machine, configure the required network settings, and verify communication between both systems and the internet.
+* Deploy a Windows 10 virtual machine in VirtualBox
+* Install Windows 10 using an ISO image
+* Configure the VM to use a NAT Network
+* Configure a static IPv4 address
+* Establish connectivity with Kali Linux
+* Verify internet connectivity
+* Troubleshoot ICMP connectivity issues
+* Document the complete lab configuration
 
-# 
+---
 
-# The project also focuses on documenting the actual setup process with screenshots, identifying any missing or incorrect instructions in the provided guide, and producing a final demonstration video.
+## Lab Environment
 
-# 
+| Component               | Configuration     |
+| ----------------------- | ----------------- |
+| Virtualization Platform | Oracle VirtualBox |
+| Operating System        | Windows 10        |
+| Network Type            | NAT Network       |
+| Network                 | `10.0.0.0/24`     |
+| Gateway                 | `10.0.0.1`        |
+| DNS                     | `8.8.8.8`         |
+| Kali Linux              | `10.0.0.2`        |
+| Windows 10              | `10.0.0.10`       |
 
-# \## Objectives
+---
 
-# 
+## Virtual Machine Configuration
 
-# \* Obtain the official Windows 10 ISO from Microsoft.
+The Windows 10 virtual machine was created with the following configuration:
 
-# \* Create and configure a Windows 10 virtual machine in VirtualBox.
+* **VM Name:** Windows10-Lab
+* **Operating System:** Microsoft Windows 10 (64-bit)
+* **Memory:** 4096 MB RAM
+* **Virtual Disk:** VDI
+* **Disk Allocation:** Dynamically allocated
+* **Disk Size:** 40 GB or more
+* **Network Adapter:** NAT Network
 
-# \* Install Windows 10 using the downloaded ISO.
+The Windows 10 ISO was attached to the VM and the operating system was successfully installed.
 
-# \* Connect Windows 10 to the existing VirtualBox NAT Network.
+---
 
-# \* Configure the required IPv4 settings.
+## Network Configuration
 
-# \* Verify Windows 10 connectivity with Kali Linux.
+The Windows 10 VM was connected to the same NAT Network as the Kali Linux VM.
 
-# \* Verify internet connectivity from Windows 10.
+### Windows 10 IPv4 Configuration
 
-# \* Verify connectivity from Kali Linux to Windows 10.
+```text
+IP Address:      10.0.0.10
+Subnet Mask:     255.255.255.0
+Default Gateway: 10.0.0.1
+Preferred DNS:   8.8.8.8
+```
 
-# \* Document each relevant setup stage with screenshots.
+### Kali Linux
 
-# \* Correct and improve the original setup instructions where required.
+```text
+IP Address:      10.0.0.2
+Network:         10.0.0.0/24
+Gateway:         10.0.0.1
+```
 
-# \* Record a complete Windows 10 VM setup demonstration.
+Both virtual machines were therefore configured on the same `10.0.0.0/24` network.
 
-# 
+---
 
-# \## Lab Environment
+## Connectivity Verification
 
-# 
+### Windows 10 → Kali Linux
 
-# | Component         | Configuration          |
+Command:
 
-# | ----------------- | ---------------------- |
+```cmd
+ping 10.0.0.2
+```
 
-# | Hypervisor        | Oracle VirtualBox      |
+**Result:** Successful.
 
-# | Operating System  | Windows 10 64-bit      |
+Windows 10 successfully communicated with the Kali Linux VM.
 
-# | Kali Linux        | Existing lab VM        |
+### Windows 10 → Internet
 
-# | Network Type      | VirtualBox NAT Network |
+Command:
 
-# | Kali Linux IP     | 10.0.0.2/24            |
+```cmd
+ping 8.8.8.8
+```
 
-# | Windows 10 IP     | 10.0.0.10/24           |
+**Result:** Successful.
 
-# | Gateway           | 10.0.0.1               |
+This confirmed that the Windows 10 VM had internet connectivity.
 
-# | DNS               | 8.8.8.8                |
+### Kali Linux → Windows 10
 
-# | Windows VM Memory | 4096 MB                |
+Command:
 
-# | Windows VM Disk   | 40 GB minimum          |
+```bash
+ping -c 4 10.0.0.10
+```
 
-# | IP Configuration  | Static IPv4            |
+Final result:
 
-# 
+```text
+4 packets transmitted, 4 received, 0% packet loss
+```
 
-# \## Repository Structure
+**Result:** Successful.
 
-# 
+This confirmed communication from Kali Linux to the Windows 10 VM.
 
-# ```text
+---
 
-# WK1-PMx-Windows10/
+## Troubleshooting
 
-# │
+During the initial connectivity test, Kali Linux could not reach the Windows 10 VM:
 
-# ├── README.md
+```text
+4 packets transmitted, 0 received, 100% packet loss
+```
 
-# │
+The Windows Firewall configuration was reviewed and the appropriate **ICMP Echo Request** inbound rule was enabled.
 
-# ├── Guide/
+The connectivity test was then repeated:
 
-# │   └── Windows10-VM-Setup-Guide.md
+```bash
+ping -c 4 10.0.0.10
+```
 
-# │
+The final test completed successfully with **0% packet loss**.
 
-# ├── Screenshots/
+This demonstrated basic troubleshooting of Windows Firewall and ICMP connectivity.
 
-# │
+---
 
-# ├── Video/
+## Verification Summary
 
-# │
+| Connectivity Test       | Result       |
+| ----------------------- | ------------ |
+| Windows 10 → Kali Linux | ✅ Successful |
+| Windows 10 → Internet   | ✅ Successful |
+| Kali Linux → Windows 10 | ✅ Successful |
+| Final Packet Loss       | ✅ 0%         |
 
-# └── Documentation/
+---
 
-# &#x20;   └── Screenshot-Checklist.md
+## Skills Demonstrated
 
-# ```
+* Oracle VirtualBox
+* Windows 10 deployment
+* Virtual machine configuration
+* NAT Network configuration
+* IPv4 addressing
+* Static IP configuration
+* DNS and gateway configuration
+* ICMP connectivity testing
+* Windows Firewall troubleshooting
+* Basic Windows and Linux networking
+* Technical documentation
 
-# 
+---
 
-# \### Directory Purpose
+## Conclusion
 
-# 
+The Windows 10 virtual machine was successfully deployed and configured in Oracle VirtualBox.
 
-# \* \*\*Guide/\*\* — Final tested and corrected Windows 10 setup guide.
+The required static network configuration was applied, connectivity between Windows 10 and Kali Linux was verified in both directions, and internet connectivity was confirmed.
 
-# \* \*\*Screenshots/\*\* — Evidence captured during each stage of the setup.
+An initial ICMP connectivity issue was also identified and resolved through Windows Firewall troubleshooting.
 
-# \* \*\*Video/\*\* — Final Windows 10 VM setup demonstration.
-
-# \* \*\*Documentation/\*\* — Supporting project documentation and checklists.
-
-# 
-
-# \## Setup Process
-
-# 
-
-# The project is completed in the following stages:
-
-# 
-
-# 1\. Download the official Windows 10 ISO.
-
-# 2\. Create the Windows 10 virtual machine.
-
-# 3\. Attach the ISO and install Windows 10.
-
-# 4\. Configure the VirtualBox NAT Network.
-
-# 5\. Configure the Windows 10 static IPv4 address.
-
-# 6\. Test Windows-to-Kali and internet connectivity.
-
-# 7\. Test Kali-to-Windows connectivity.
-
-# 8\. Complete the documentation and final evidence.
-
-# 
-
-# \## Network Verification
-
-# 
-
-# Successful completion requires verification of:
-
-# 
-
-# ```text
-
-# Windows 10 → Kali Linux
-
-# 10.0.0.10 → 10.0.0.2
-
-# 
-
-# Windows 10 → Internet
-
-# 10.0.0.10 → 8.8.8.8
-
-# 
-
-# Kali Linux → Windows 10
-
-# 10.0.0.2 → 10.0.0.10
-
-# ```
-
-# 
-
-# The corresponding screenshots are stored in the `Screenshots/` directory.
-
-# 
-
-# \## Documentation Approach
-
-# 
-
-# The original Windows 10 setup guide is being followed and tested step by step rather than reproduced without verification.
-
-# 
-
-# Where a step is incomplete, unclear, or technically incorrect, the procedure will be updated based on the actual working configuration.
-
-# 
-
-# Screenshots are captured as evidence during the implementation and matched to the relevant instructions in the final guide.
-
-# 
-
-# \## Project Status
-
-# 
-
-# \*\*Status:\*\* In Progress
-
-# 
-
-# The repository structure and documentation workflow have been established. The Windows 10 virtual machine setup and evidence collection will be documented as the project progresses.
-
-# 
-
-# \## Final Deliverables
-
-# 
-
-# \* Corrected Windows 10 VirtualBox setup guide
-
-# \* Step-by-step screenshots
-
-# \* Screenshot checklist
-
-# \* Windows 10 VM setup demonstration video
-
-# \* Git/GitHub project history
-
-
-
+**Lab Status: Completed ✅**
